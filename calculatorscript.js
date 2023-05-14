@@ -1,11 +1,9 @@
 let display=document.getElementById('textdisplaydiv');
 let i=0;
 let x=0;
-let y=0;
 let arr=0;
 let oparr='';
 let Arrayofx=[];
-let opcodearray=[];
 let flag=0;
 let res=0;
 let buttons=Array.from(document.getElementsByClassName('inputbuttons'));
@@ -32,101 +30,102 @@ buttons.map( button => {
                      x=parseFloat(display.innerText);
                      Arrayofx.push(x);
                     display.innerText='';
+                    opdisplay.innerText='';
                     opdisplay.innerText='+';
                      flag=1;
                      oparr=opdisplay.innerText;
-                     opcodearray.push(oparr);
+                     Arrayofx.push(oparr);
                     break;
                     case '-':
                          x=parseFloat(display.innerText);
                          Arrayofx.push(x);
                         display.innerText='';
+                        opdisplay.innerText='';
                         opdisplay.innerText='-';
                          flag=2;
                          oparr=opdisplay.innerText;
-                     opcodearray.push(oparr);
+                         Arrayofx.push(oparr);
                     break;
                     case 'x':
                          x=parseFloat(display.innerText);
                          Arrayofx.push(x);
                         display.innerText='';
+                        opdisplay.innerText='';
                         opdisplay.innerText='x';
                          flag=3;
                          oparr=opdisplay.innerText;
-                     opcodearray.push(oparr);
+                         Arrayofx.push(oparr);
                     break;
                     case '/':
                          x=parseFloat(display.innerText);
                          Arrayofx.push(x);
                         display.innerText='';
+                        opdisplay.innerText='';
                         opdisplay.innerText='/';
                          flag=4;
                          oparr=opdisplay.innerText;
-                     opcodearray.push(oparr);
+                         Arrayofx.push(oparr);
                     break;
                     case '=':
-                        y=parseFloat(display.innerText);
-                        switch (flag) {
-                            case 1:
-                                for (let j = 0; j < Arrayofx.length; j++) {
-                                  arr=arr+Arrayofx[j];
-                                }
-                                res=arr+y;
-                                Arrayofx.length=0;
-                                arr=0;
-                                var result= res.toString();
-                                display.innerText=result;
-                                break;
-                                case 2:
-                                    var min=0;
-                                    for (let j = 1; j < Arrayofx.length; j++) {
-                                        arr=arr+Arrayofx[j];
-                                      }
-                                      min=Arrayofx[0]-arr;
-                                      console.log(min);
-                                      res=min-y;
-                                      var result= res.toString();
-                                      display.innerText=result;
-                                      Arrayofx.length=0;
-                                      arr=0;
-                                break;
-                                case 3:
-                                    arr=1;
-                                    for (let j = 0; j < Arrayofx.length; j++) {
-                                        arr=arr*Arrayofx[j];
-                                      }
-                                      res=arr*y;
-                                      var result= res.toString();
-                                      display.innerText=result;
-                                      Arrayofx.length=0;
-                                      arr=0;
-                                break;
-                                case 4:
-                                    arr=Arrayofx[0];
-                                    for (let j = 1; j < Arrayofx.length; j++) {
-                                        arr=arr/Arrayofx[j];
-                                      }
-                                      res=arr/y;
-                                      var result= res.toString();
-                                      display.innerText=result;
-                                      Arrayofx.length=0;
-                                      arr=0;
-                                break;
+                        x=parseFloat(display.innerText);
+                        display.innerText='';
+                        Arrayofx.push(x);
                         
-                            default:
-                                break;
+                        //this lines of code is used to remove the nan from the array
+                        Arrayofx=Arrayofx.filter(function (n) {
+                           return n || n ===0;
+                        });
+                        console.log(Arrayofx);
+                            for (let j = 0; j < Arrayofx.length; j++) {
+                                switch (Arrayofx[j]) {
+                                    case '/':
+                                        arr=Arrayofx[j-1]/Arrayofx[j+1];
+                                        Arrayofx.splice(j-1,3,arr);
+                                        j=0;
+                                        break;
+                                }
+                            }
+                        for (let j = 0; j < Arrayofx.length; j++) {
+                            switch (Arrayofx[j]) {
+                                case 'x':
+                                    arr=Arrayofx[j-1]*Arrayofx[j+1];
+                                    Arrayofx.splice(j-1,3,arr);
+                                    j=0;
+                                    break;
+                            }
                         }
-                         
+                        for (let j = 0; j < Arrayofx.length; j++) {
+                            switch (Arrayofx[j]) {
+                                case '-':
+                                    arr=Arrayofx[j-1]-Arrayofx[j+1];
+                                    Arrayofx.splice(j-1,3,arr);
+                                    j=0;
+                                    break;
+                            }
+                        }
+                        for (let j = 0; j < Arrayofx.length; j++) {
+                            switch (Arrayofx[j]) {
+                                case '+':
+                                    arr=Arrayofx[j-1]+Arrayofx[j+1];
+                                    Arrayofx.splice(j-1,3,arr);
+                                    j=0;
+                                    break;
+                            }
+                        }
+                        display.innerText=Arrayofx;
+                        Arrayofx.length=0;
                     break;
                     case 'AC':
                         display.innerText='';
                         opdisplay.innerText='';
+                        Arrayofx.length=0;
                     break;
                     case 'DE':
-                         
-                    break;
-
-                default:
+                        var str=display.innerText;
+                        opdisplay.innerText='';
+                        str=str.substring(0,str.length-3);
+                        display.innerText=str;
+                        Arrayofx.length=Arrayofx.length-1;
                     break;
             }
         }
